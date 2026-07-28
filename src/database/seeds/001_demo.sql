@@ -1,0 +1,1 @@
+INSERT INTO users(id,name,email,password_hash) VALUES ('00000000-0000-0000-0000-000000000001','Demo Owner','demo@stockpilot.app','$2b$12$YFXA/5uecTdxE1YwTMIFqu5mDsOiydoHFDqepPMfY3.fOECPGVdWG') ON CONFLICT DO NOTHING;
