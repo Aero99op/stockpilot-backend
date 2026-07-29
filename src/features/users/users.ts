@@ -1,4 +1,9 @@
-import { Router } from 'express';
+import {
+  Router,
+  type Request,
+  type Response,
+  type NextFunction,
+} from 'express';
 import { body } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import { query } from '../../database/pool.js';
@@ -21,7 +26,11 @@ usersRouter.get('/me', async (req, res, next) => {
 usersRouter.patch(
   '/me',
   [body('name').optional().trim().isLength({ min: 2, max: 100 }), validate],
-  async (req, res, next) => {
+  async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
     try {
       const r = await query(
         'UPDATE users SET name=COALESCE($1,name),avatar_url=COALESCE($2,avatar_url),updated_at=now() WHERE id=$3 RETURNING id,name,email,role,avatar_url',
@@ -46,7 +55,11 @@ usersRouter.patch(
     }),
     validate,
   ],
-  async (req, res, next) => {
+  async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
     try {
       const r = await query<{ password_hash: string }>(
         'SELECT password_hash FROM users WHERE id=$1',

@@ -1,4 +1,9 @@
-import { Router } from 'express';
+import {
+  Router,
+  type Request,
+  type Response,
+  type NextFunction,
+} from 'express';
 import { body, param } from 'express-validator';
 import multer from 'multer';
 
@@ -189,7 +194,11 @@ OFFSET $8
 productsRouter.get(
   '/:id',
   [param('id').isUUID(), validate],
-  async (req, res, next) => {
+async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
     try {
       const result = await query(
         `
@@ -255,10 +264,14 @@ const productValidation = [
 ];
 
 /* ===========================================================
-   CREATE PRODUCT
+CREATE PRODUCT
 =========================================================== */
 
-productsRouter.post('/', productValidation, async (req, res, next) => {
+productsRouter.post('/', productValidation, async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const currentQuantity =
   req.body.currentQuantity ?? 0;
@@ -398,7 +411,11 @@ productsRouter.patch(
     validate,
   ],
 
-  async (req, res, next) => {
+  async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
     try {
 
       const existingProduct = await query(
@@ -528,7 +545,11 @@ AND
 productsRouter.post(
   '/:id/image',
   [param('id').isUUID(), validate, upload.single('image')],
-  async (req, res, next) => {
+  async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
     try {
       if (!req.file) {
         throw new AppError(422, 'Image is required');
@@ -581,7 +602,11 @@ jsonb_build_array($1::text),
 productsRouter.delete(
   '/:id',
   [param('id').isUUID(), validate],
-  async (req, res, next) => {
+  async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
     try {
       const result = await query(
         `

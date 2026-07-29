@@ -1,4 +1,9 @@
-import { Router } from 'express';
+import {
+  Router,
+  type Request,
+  type Response,
+  type NextFunction,
+} from 'express';
 import { body, param } from 'express-validator';
 import { query } from '../../database/pool.js';
 import { authenticate } from '../../middlewares/auth.js';
@@ -82,7 +87,11 @@ categoriesRouter.post(
     body('description').optional().trim().isLength({ max: 500 }),
     validate,
   ],
-  async (req, res, next) => {
+ async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
     try {
       const r = await query(
         'INSERT INTO categories(user_id,name,description) VALUES($1,$2,$3) RETURNING *',
@@ -101,7 +110,11 @@ categoriesRouter.patch(
     body('name').optional().trim().isLength({ min: 2, max: 100 }),
     validate,
   ],
-  async (req, res, next) => {
+async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
     try {
       const r = await query(
         'UPDATE categories SET name=COALESCE($1,name),description=COALESCE($2,description),updated_at=now() WHERE id=$3 AND user_id=$4 RETURNING *',
@@ -122,7 +135,11 @@ categoriesRouter.patch(
 categoriesRouter.delete(
   '/:id',
   [param('id').isUUID(), validate],
-  async (req, res, next) => {
+async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
     try {
       const r = await query(
         'DELETE FROM categories WHERE id=$1 AND user_id=$2 RETURNING id',

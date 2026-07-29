@@ -83,7 +83,11 @@ authRouter.post(
     body('password').notEmpty(),
     validate,
   ],
-  async (req, res, next) => {
+  async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
     try {
       const r = await query<User>('SELECT * FROM users WHERE email=$1', [
         req.body.email,
@@ -106,7 +110,11 @@ authRouter.post(
 authRouter.post(
   '/refresh',
   [body('refreshToken').notEmpty(), validate],
-  async (req, res, next) => {
+  async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
     try {
       const p = jwt.verify(req.body.refreshToken, env.jwtSecret) as {
         id: string;

@@ -1,4 +1,9 @@
-import { Router } from 'express';
+import {
+  Router,
+  type Request,
+  type Response,
+  type NextFunction,
+} from 'express';
 import { body, param } from 'express-validator';
 import { query, transaction } from '../../database/pool.js';
 import { authenticate } from '../../middlewares/auth.js';
@@ -113,7 +118,11 @@ inventoryRouter.post(
     validate,
   ],
 
-  async (req, res, next) => {
+  async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
     try {
       const result = await transaction(
         async (client) => {
