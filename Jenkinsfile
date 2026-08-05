@@ -88,5 +88,13 @@ stage('Prepare Task Definition') {
         '''
     }
 }
+stage('Register Task Definition') {
+    steps {
+        sh '''
+        aws ecs register-task-definition \
+        --cli-input-json file://new-task-definition.json
+        '''
+    }
+}
     }
 }
