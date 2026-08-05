@@ -63,7 +63,7 @@ stage('Download Task Definition') {
     steps {
         sh '''
         aws ecs describe-task-definition \
-        --task-definition stockpilot-dev-task \
+        --task-definition stockpilot-dev-backend \
         --query taskDefinition \
         > task-definition.json
         '''
