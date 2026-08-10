@@ -34,7 +34,7 @@ const lambdaClient = new LambdaClient({
 });
 
 const NOTIFICATION_LAMBDA_NAME =
-  'stockpilot-dev-notification-lambda';
+  'stockpilot-low-stock-alert';
 
 /* ===========================================================
    INVENTORY HISTORY
