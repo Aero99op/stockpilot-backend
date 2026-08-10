@@ -51,61 +51,66 @@ pipeline {
                 '''
             }
         }
+
         stage('Push Docker Image') {
-    steps {
-        sh '''
-        docker push \
-        ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG}
-        '''
-    }
-}
-stage('Download Task Definition') {
-    steps {
-        sh '''
-        aws ecs describe-task-definition \
-        --task-definition stockpilot-dev-backend \
-        --query taskDefinition \
-        > task-definition.json
-        '''
-    }
-}
-stage('Prepare Task Definition') {
-    steps {
-        sh '''
-        jq '
-        del(
-          .taskDefinitionArn,
-          .revision,
-          .status,
-          .requiresAttributes,
-          .compatibilities,
-          .registeredAt,
-          .registeredBy
-        )
-        | .containerDefinitions[0].image =
-        "'${AWS_ACCOUNT_ID}'.dkr.ecr.'${AWS_REGION}'.amazonaws.com/'${ECR_REPOSITORY}':'${IMAGE_TAG}'"
-        ' task-definition.json > new-task-definition.json
-        '''
-    }
-}
-stage('Register Task Definition') {
-    steps {
-        sh '''
-        aws ecs register-task-definition \
-        --cli-input-json file://new-task-definition.json
-        '''
-    }
-}
-stage('Update ECS Service') {
-    steps {
-        sh '''
-        aws ecs update-service \
-        --cluster stockpilot-dev-ecs-cluster \
-        --service stockpilot-dev-backend-service \
-        --task-definition stockpilot-dev-backend \
-        --force-new-deployment
-        '''
-    }
-}
+            steps {
+                sh '''
+                docker push \
+                ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG}
+                '''
+            }
+        }
+
+        stage('Download Task Definition') {
+            steps {
+                sh '''
+                aws ecs describe-task-definition \
+                --task-definition stockpilot-dev-backend \
+                --query taskDefinition \
+                > task-definition.json
+                '''
+            }
+        }
+
+        stage('Prepare Task Definition') {
+            steps {
+                sh '''
+                jq '
+                del(
+                    .taskDefinitionArn,
+                    .revision,
+                    .status,
+                    .requiresAttributes,
+                    .compatibilities,
+                    .registeredAt,
+                    .registeredBy
+                )
+                | .containerDefinitions[0].image =
+                "'${AWS_ACCOUNT_ID}'.dkr.ecr.'${AWS_REGION}'.amazonaws.com/'${ECR_REPOSITORY}':'${IMAGE_TAG}'"
+                ' task-definition.json > new-task-definition.json
+                '''
+            }
+        }
+
+        stage('Register Task Definition') {
+            steps {
+                sh '''
+                aws ecs register-task-definition \
+                --cli-input-json file://new-task-definition.json
+                '''
+            }
+        }
+
+        stage('Update ECS Service') {
+            steps {
+                sh '''
+                aws ecs update-service \
+                --cluster stockpilot-dev-ecs-cluster \
+                --service stockpilot-dev-backend-service \
+                --task-definition stockpilot-dev-backend \
+                --force-new-deployment
+                '''
+            }
+        }
     }
 }
