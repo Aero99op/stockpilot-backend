@@ -26,7 +26,7 @@ export const inventoryRouter = Router();
 inventoryRouter.use(authenticate);
 
 /* ===========================================================
-   AWS LAMBDAaa
+   AWS LAMBDAaa meow
 =========================================================== */
 
 const lambdaClient = new LambdaClient({
